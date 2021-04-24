@@ -1,0 +1,17 @@
+{
+  "name": "root",
+  "private": true,
+  "scripts": {
+    "start": "concurrently -k yarn:dev-web yarn:dev-server",
+    "bootstrap": "lerna bootstrap",
+    "start-server": "lerna run start --stream --scope=@root/server",
+    "dev-server": "lerna run start:dev --stream --scope=@root/server",
+    "dev-web": "lerna run start --stream --scope=@root/web"
+  },
+  "devDependencies": {
+    "lerna": "^4.0.0"
+  },
+  "dependencies": {
+    "concurrently": "^6.0.2"
+  }
+}
