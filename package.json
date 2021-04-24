@@ -2,11 +2,11 @@
   "name": "root",
   "private": true,
   "scripts": {
-    "start": "concurrently -k yarn:dev-web yarn:dev-server",
+    "start": "concurrently -k yarn:start:dev-web yarn:start:dev-server",
     "bootstrap": "lerna bootstrap",
-    "start-server": "lerna run start --stream --scope=@root/server",
-    "dev-server": "lerna run start:dev --stream --scope=@root/server",
-    "dev-web": "lerna run start --stream --scope=@root/web"
+    "start:server": "lerna run start --stream --scope=@root/server",
+    "start:dev-server": "lerna run start:dev --stream --scope=@root/server",
+    "start:dev-web": "lerna run start:dev --stream --scope=@root/web"
   },
   "devDependencies": {
     "lerna": "^4.0.0"
