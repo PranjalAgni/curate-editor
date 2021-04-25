@@ -20,7 +20,7 @@ const initalizeServer = (): express.Application => {
   debugLog("All Middlewares applied");
   useExpressServer(app, {
     routePrefix: "/api",
-    controllers: [EditorController]
+    controllers: [__dirname + "/controllers/*.ts"]
   });
   return app;
 };
