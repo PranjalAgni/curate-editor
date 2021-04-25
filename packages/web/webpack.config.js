@@ -9,7 +9,7 @@ module.exports = {
   entry: "./src/index.tsx",
   target: "web",
   mode: isProd ? "production" : "development",
-  devtool: isProd ? "none" : "eval-source-map",
+  devtool: isProd ? "none" : "cheap-module-source-map",
   output: {
     path: path.resolve(__dirname, "build"),
     filename: "bundle.js"
@@ -54,6 +54,22 @@ module.exports = {
     historyApiFallback: true,
     watchOptions: {
       poll: true
+    },
+    stats: {
+      colors: true,
+      hash: false,
+      version: false,
+      timings: true,
+      assets: true,
+      chunks: false,
+      modules: false,
+      reasons: false,
+      children: false,
+      source: false,
+      errors: true,
+      errorDetails: true,
+      warnings: false,
+      publicPath: false
     }
   }
 };
