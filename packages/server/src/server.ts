@@ -5,7 +5,6 @@ import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
 import { useExpressServer } from "routing-controllers";
-import EditorController from "./controllers/editor.controller";
 
 const debugLog = debug("ces:server");
 
