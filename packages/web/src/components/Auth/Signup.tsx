@@ -1,15 +1,13 @@
-import React from "react";
 import {
-  Container,
   Avatar,
-  Typography,
-  TextField,
   Button,
-  FormControlLabel,
-  Checkbox
+  Container,
+  TextField,
+  Typography
 } from "@material-ui/core";
-import { LockOutlined } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
+import { LockOutlined } from "@material-ui/icons";
+import React from "react";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -30,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 2)
   }
 }));
+
 const Signup = () => {
   const classes = useStyles();
   return (
@@ -42,6 +41,17 @@ const Signup = () => {
           Sign up
         </Typography>
         <form className={classes.form} noValidate>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="name"
+            label="Full Name"
+            name="name"
+            autoComplete="name"
+            autoFocus
+          />
           <TextField
             variant="outlined"
             margin="normal"
@@ -64,10 +74,7 @@ const Signup = () => {
             id="password"
             autoComplete="current-password"
           />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
+
           <Button
             type="submit"
             fullWidth
@@ -75,7 +82,7 @@ const Signup = () => {
             color="primary"
             className={classes.submit}
           >
-            Sign In
+            Sign Up
           </Button>
         </form>
       </div>
