@@ -1,14 +1,12 @@
+import CssBaseline from "@material-ui/core/CssBaseline";
 import React from "react";
+import AppRouter from "./router/index";
 
-export interface HelloWorldProps {
-  userName: string;
-  lang: string;
-}
-
-const App = ({ userName, lang }: HelloWorldProps) => (
-  <h1>
-    Hi {userName} from React! Welcome to {lang}!
-  </h1>
+const App = () => (
+  <>
+    <CssBaseline />
+    <AppRouter />
+  </>
 );
 
 export default App;

@@ -45,7 +45,8 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin()
   ],
   devServer: {
-    hotOnly: true,
+    hot: true,
+    inline: true,
     host: "localhost",
     port: 3000,
     compress: true,
