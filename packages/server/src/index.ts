@@ -1,14 +1,18 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require("dotenv-safe").config({ allowEmptyValues: true });
 import "reflect-metadata";
 import debug from "debug";
 import initalizeServer from "./server";
+import config from "./config/index";
 
 const debugLog = debug("ces:index");
 
-const startServer = () => {
-  const app = initalizeServer();
-  const PORT = 5000;
-  app.listen(PORT, () => {
-    debugLog(`Server running at http://localhost:${PORT}`);
+const startServer = async () => {
+  const app = await initalizeServer();
+  app.listen(config.port, () => {
+    debugLog(
+      `Server running at http://localhost:${config.port} in ${config.env} mode`
+    );
   });
 };
 

@@ -1,12 +1,12 @@
-import { Get, JsonController, Req, Res } from "routing-controllers";
-import { EditorState } from "../interfaces/editor";
+import { Get, JsonController } from "routing-controllers";
+import { EditorStateResponse } from "../../types/editor";
 import EditorService from "../services/editor.service";
 import Container from "typedi";
 
 @JsonController("/editor")
 class EditorController {
   @Get("/state")
-  getState(): EditorState & { status: number } {
+  getState(): EditorStateResponse {
     const editorService = Container.get(EditorService);
     return {
       status: 200,

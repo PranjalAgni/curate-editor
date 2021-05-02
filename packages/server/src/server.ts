@@ -4,12 +4,16 @@ import debug from "debug";
 import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
-import { useExpressServer } from "routing-controllers";
-
+import { createExpressServer } from "routing-controllers";
+import loaders from "./loaders/index";
 const debugLog = debug("ces:server");
 
-const initalizeServer = (): express.Application => {
-  const app = express();
+const initalizeServer = async (): Promise<express.Application> => {
+  await loaders();
+  const app = createExpressServer({
+    routePrefix: "/api",
+    controllers: [__dirname + "/core/controllers/*.ts"]
+  });
   app.use(compression());
   app.use(helmet());
   app.use(cors());
@@ -17,10 +21,6 @@ const initalizeServer = (): express.Application => {
   app.use(morgan("combined"));
 
   debugLog("All Middlewares applied");
-  useExpressServer(app, {
-    routePrefix: "/api",
-    controllers: [__dirname + "/controllers/*.ts"]
-  });
   return app;
 };
 
