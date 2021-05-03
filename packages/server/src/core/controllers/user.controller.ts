@@ -1,7 +1,10 @@
+import authDao from "@core/daos/auth.dao";
+import userDao from "@core/daos/user.dao";
+import { User } from "@entities/User";
+import { hashPassword } from "@utils/password";
+import { SignupUser, SignupUserRes } from "@utils/types/user";
 import debug from "debug";
 import { Body, JsonController, Post } from "routing-controllers";
-import { SignupUser, SignupUserRes } from "user";
-import userDao from "../daos/user.dao";
 
 const debugLog = debug("ces:controllers-user");
 @JsonController("/user")
@@ -15,6 +18,16 @@ class UserController {
         throw new Error("User already exists");
       }
 
+      const newUser = new User();
+      newUser.fullName = user.fullName;
+      newUser.email = user.email;
+      newUser.password = await hashPassword(user.password);
+      await userDao.create(newUser);
+      const sessionId = await authDao.create(newUser);
+      return {
+        message: "OK",
+        sessionId
+      };
       // here user is unique
       // hash the password before saving in DB
       // save data to DB
@@ -23,11 +36,8 @@ class UserController {
       // return the response
     } catch (ex) {
       debugLog(ex);
+      throw ex;
     }
-
-    return {
-      message: "OK"
-    };
   }
 }
 

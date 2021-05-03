@@ -6,4 +6,5 @@ export type SignupUser = {
 
 export type SignupUserRes = {
   message: string;
+  sessionId: string;
 };

@@ -1,4 +1,4 @@
-import { User } from "../../entities/User";
+import { User } from "@entities/User";
 import { getRepository } from "typeorm";
 
 class UserDao {
@@ -16,6 +16,10 @@ class UserDao {
         email
       }
     });
+  }
+
+  async create(user: User) {
+    return await getRepository(User).create(user).save();
   }
 }
 

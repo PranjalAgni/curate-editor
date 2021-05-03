@@ -1,5 +1,5 @@
 import { Get, JsonController } from "routing-controllers";
-import { EditorStateResponse } from "../../types/editor";
+import { EditorStateResponse } from "../../utils/types/editor";
 import EditorService from "../services/editor.service";
 import Container from "typedi";
 

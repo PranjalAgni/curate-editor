@@ -1,5 +1,6 @@
 import { Connection, createConnection } from "typeorm";
 import debug from "debug";
+import config from "@config/index";
 
 const connectDB = async (): Promise<Connection> => {
   const debugLog = debug("ces:loaders-db");
@@ -12,7 +13,7 @@ const connectDB = async (): Promise<Connection> => {
     debugLog(err);
   }
 
-  await db.synchronize();
+  if (config.isDev) await db.synchronize();
   return db;
 };
 

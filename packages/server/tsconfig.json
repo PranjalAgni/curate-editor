@@ -12,8 +12,17 @@
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
-      "*": ["node_modules/*", "src/types/*"]
-    }
+      "*": ["node_modules/*"],
+      "@core/*":["src/core/*"],
+      "@middlewares/*":["src/core/middlewares/*"],
+      "@entities/*":["src/entities/*"],
+      "@config/*": ["src/config/*"],
+      "@loaders/*": ["src/loaders/*"],
+      "@utils/*": ["src/utils/*"]
+    },
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "exclude": [
+    "node_modules"
+  ],
 }
