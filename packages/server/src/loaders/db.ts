@@ -1,20 +1,20 @@
-import { Connection, createConnection } from "typeorm";
-import debug from "debug";
 import config from "@config/index";
+import logger from "@utils/logger";
+import debug from "debug";
+import { Connection, createConnection } from "typeorm";
 
-const connectDB = async (): Promise<Connection> => {
-  const debugLog = debug("ces:loaders-db");
-  let db = null;
-  try {
-    debugLog("Starting to connect DB");
-    db = await createConnection();
-    debugLog("Successfully DB connected");
-  } catch (err) {
-    debugLog(err);
+const debugLog = debug("server:loaders-db");
+
+const loadDB = async (): Promise<Connection> => {
+  const db = await createConnection();
+  if (config.isDev) {
+    // await db.synchronize();
+    debugLog("DB synced");
   }
 
-  if (config.isDev) await db.synchronize();
+  logger.info("DB connected");
+
   return db;
 };
 
-export default connectDB;
+export default loadDB;

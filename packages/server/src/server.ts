@@ -1,36 +1,23 @@
-import loaders from "@loaders/index";
-import { errorHandler, notFound } from "@middlewares/common/index";
-import compression from "compression";
-import cors from "cors";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require("dotenv-safe").config({
+  allowEmptyValues: true
+});
+require("module-alias/register");
+import config from "@config/index";
 import debug from "debug";
-import express from "express";
-import helmet from "helmet";
-import morgan from "morgan";
-import { useExpressServer } from "routing-controllers";
+import "reflect-metadata";
+import initalizeApp from "./app";
 
-const debugLog = debug("ces:server");
+const startServer = async () => {
+  const debugLog: debug.IDebugger = debug("server");
 
-const initalizeServer = async (): Promise<express.Application> => {
-  await loaders();
-  let app = express();
-  app.use(compression());
-  app.use(helmet());
-  app.use(cors());
-  app.use(express.json());
-  app.use(morgan("combined"));
+  const app = await initalizeApp();
 
-  app = useExpressServer(app, {
-    routePrefix: "/api",
-    defaultErrorHandler: false,
-    controllers: [__dirname + "/core/controllers/*.ts"]
+  app.listen(config.port, () => {
+    debugLog(
+      `Server running at http://localhost:${config.port} in ${config.env} mode`
+    );
   });
-
-  app.use(notFound);
-  app.use(errorHandler);
-
-  debugLog("All Middlewares applied");
-
-  return app;
 };
 
-export default initalizeServer;
+startServer();

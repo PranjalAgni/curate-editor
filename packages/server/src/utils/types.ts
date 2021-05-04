@@ -1,0 +1,21 @@
+import { Response } from "express";
+import isEmail from "is-email";
+import { define } from "superstruct";
+
+export type ResponseObject = {
+  res: Response;
+  status?: number;
+  error?: Error | null;
+  result: unknown;
+};
+
+export type JWTTokenData = {
+  userId: number;
+};
+
+export type AuthorizationTokens = {
+  refreshToken: string;
+  accessToken: string;
+};
+
+export const Email = define("Email", isEmail);

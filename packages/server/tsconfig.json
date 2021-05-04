@@ -1,27 +1,27 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "CommonJS",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "target": "es6",
     "noImplicitAny": true,
     "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
     "sourceMap": true,
     "outDir": "dist",
     "baseUrl": ".",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "paths": {
-      "*": ["node_modules/*"],
-      "@core/*":["src/core/*"],
-      "@middlewares/*":["src/core/middlewares/*"],
+      "*": ["node_modules/*", "./types/*"],
+      "@auth/*":["src/modules/auth/*"],
+      "@common/*":["src/modules/common/*"],
+      "@user/*":["src/modules/user/*"],
       "@entities/*":["src/entities/*"],
       "@config/*": ["src/config/*"],
-      "@loaders/*": ["src/loaders/*"],
-      "@utils/*": ["src/utils/*"]
+      "@utils/*": ["src/utils/*"],
     },
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "./types/*"],
   "exclude": [
     "node_modules"
   ],

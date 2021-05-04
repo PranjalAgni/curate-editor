@@ -9,9 +9,9 @@ export default {
   db: {
     host: process.env.DB_HOST,
     name: process.env.DB_SCHEMA,
-    port: process.env.DB_PORT,
     username: process.env.DB_USER,
-    password: process.env.DB_PASSWORD
+    password: process.env.DB_PASSWORD,
+    port: process.env.DB_PORT
   },
   winston: {
     file: {
