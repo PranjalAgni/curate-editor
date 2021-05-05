@@ -10,7 +10,7 @@
     "build": "npm run clean && tsc",
     "prestart": "npm run build",
     "start": "cross-env NODE_ENV=production node dist/server.js",
-    "start:dev": "cross-env DEBUG=server* nodemon",
+    "start:dev": "concurrently -k \"npm run watch\" \"cross-env DEBUG=server* nodemon\"",
     "lint": "eslint . --ext .ts"
   },
   "_moduleAliases": {
@@ -51,6 +51,7 @@
     "app-root-path": "^3.0.0",
     "argon2": "^0.27.1",
     "compression": "^1.7.4",
+    "concurrently": "^6.0.2",
     "cors": "^2.8.5",
     "debug": "^4.3.1",
     "dotenv-safe": "^8.2.0",
