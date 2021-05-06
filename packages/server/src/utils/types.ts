@@ -1,6 +1,4 @@
 import { Response } from "express";
-import isEmail from "is-email";
-import { define } from "superstruct";
 
 export type ResponseObject = {
   res: Response;
@@ -17,5 +15,3 @@ export type AuthorizationTokens = {
   refreshToken: string;
   accessToken: string;
 };
-
-export const Email = define("Email", isEmail);

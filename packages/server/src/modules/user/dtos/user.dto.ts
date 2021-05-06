@@ -8,7 +8,7 @@ import {
   string
 } from "superstruct";
 
-import { Email } from "@utils/types";
+import { Email } from "@utils/validators";
 
 export const CreateUserStruct = object({
   fullName: size(string(), 3, 50),
