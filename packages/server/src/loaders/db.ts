@@ -8,7 +8,7 @@ const debugLog = debug("server:loaders-db");
 const loadDB = async (): Promise<Connection> => {
   const db = await createConnection();
   if (config.isDev) {
-    // await db.synchronize();
+    await db.synchronize();
     debugLog("DB synced");
   }
 
