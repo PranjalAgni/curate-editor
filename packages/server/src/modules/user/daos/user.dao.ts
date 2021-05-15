@@ -1,6 +1,6 @@
 import { AuthToken } from "@entities/AuthToken";
 import { User } from "@entities/User";
-import { getConnection, getRepository } from "typeorm";
+import { getConnection, getManager, getRepository } from "typeorm";
 
 // const debugLog: debug.IDebugger = debug("server:user-dao");
 
@@ -53,12 +53,40 @@ class UserDao {
       .getOne();
   }
 
+  async getUserByEmail(emailId: string) {
+    return await getRepository(User)
+      .createQueryBuilder("user")
+      .where("email = :emailId", { emailId })
+      .getOne();
+  }
+
   async createUserAuthToken(user: User) {
     return await getRepository(AuthToken)
       .create({
         user
       })
       .save();
+  }
+
+  async getUserWithPassword(emailId: string) {
+    return await getRepository(User)
+      .createQueryBuilder("user")
+      .addSelect("user.password")
+      .where("email = :emailId", { emailId })
+      .getOne();
+  }
+
+  async deleteUserAuthToken(sessionId: string) {
+    await getRepository(AuthToken)
+      .createQueryBuilder()
+      .delete()
+      .where("sessionId = :sessionId", { sessionId })
+      .execute();
+  }
+
+  async deleteUserAuthTokenByEmail(emailId: string) {
+    const deleteByEmailQueryString = `DELETE FROM "auth_token" token WHERE token."userId" = (SELECT u."userId" FROM "user" u WHERE u.email = '${emailId}')`;
+    await getConnection().query(deleteByEmailQueryString);
   }
 }
 

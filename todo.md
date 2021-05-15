@@ -3,15 +3,26 @@
 [] Complete Signup component
 [] Write Signin component
 [] Setup PrivateRoute
-[] Setup zustand state management
+[] Setup Redux + Sagas for state management
 [] Setup axios
 
 ## Server
 
-[] Setup config
-[] Setup TypeORM
-[] Write Entities
-[] Write Middlewares
-[] Setup session based auth
-[] Setup auth routes
-[] Setup Superstruct for validator
+[x] Setup config
+[x] Setup TypeORM
+[x] Write Entities
+[x] Write Middlewares
+[x] Setup session based auth
+[x] Setup auth routes
+[x] Setup Superstruct for validator
+
+## Questions
+
+1. Why React and NodeJS?
+
+2.
+
+Planner:
+
+- Work on Curate Editor Project ~ 2hrs
+- Solve Stack problem from SDE sheet ~ 4hrs

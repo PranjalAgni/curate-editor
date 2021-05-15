@@ -13,7 +13,11 @@ export class UserRoutes extends CommonRoutesConfig {
     this.app
       .route("/users")
       .get(userController.getAllUsers)
-      .post([userMiddleware.validateCreateUserBody, userController.createUser]);
+      .post([
+        userMiddleware.validateCreateUserBody,
+        userController.createUser,
+        userMiddleware.addUserAuthToken
+      ]);
 
     this.app.route("/users/:userId").get([userController.getUserById]);
 

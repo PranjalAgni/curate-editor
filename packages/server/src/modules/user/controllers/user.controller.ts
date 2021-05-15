@@ -1,8 +1,12 @@
 import {
   CreateUserDto,
   ReadUserByIdStruct,
-  ReadUserStruct
+  ReadUserStruct,
+  SignInUserDto
 } from "@user/dtos/user.dto";
+import InvalidCredentials from "@user/exceptions/InvalidCredentials";
+import UserAlreadyExists from "@user/exceptions/UserAlreadyExists";
+import UserNotFound from "@user/exceptions/UserNotFound";
 import userService from "@user/services/user.service";
 import { formatResponse } from "@utils/express";
 import logger from "@utils/logger";
@@ -29,17 +33,34 @@ class UserController {
   async createUser(req: Request, res: Response, next: NextFunction) {
     try {
       const data = req.body as CreateUserDto;
+      const oldUser = await userService.getUserByEmail(data.email);
+      if (oldUser) {
+        throw new UserAlreadyExists(
+          `User already exists: ${data.email}`,
+          oldUser
+        );
+      }
+
       const user = await userService.create(data);
       debugLog(user);
-      addSessionToken(res, user);
+      const sessionId = await userService.createUserSession(user);
+      addSessionToken(res, sessionId);
       return formatResponse({
         res,
-        result: { done: true }
+        result: {
+          id: user.userId,
+          email: user.email
+        }
       });
     } catch (ex) {
       logger.error(ex.message);
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR);
-      return next(createError(StatusCodes.INTERNAL_SERVER_ERROR, ex.message));
+      if (ex instanceof UserAlreadyExists) {
+        res.status(StatusCodes.CONFLICT);
+      } else {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR);
+      }
+
+      return next(createError(res.statusCode, ex.message));
     }
   }
 
@@ -66,6 +87,52 @@ class UserController {
       return formatResponse({
         res,
         result: user
+      });
+    } catch (ex) {
+      logger.error(ex.message);
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR);
+      return next(createError(StatusCodes.INTERNAL_SERVER_ERROR, ex.message));
+    }
+  }
+
+  async signinUser(req: Request, res: Response, next: NextFunction) {
+    try {
+      const data = req.body as SignInUserDto;
+
+      const signedInUser = await userService.signinUser(data);
+      const sessionId = await userService.createUserSession(signedInUser);
+      addSessionToken(res, sessionId);
+      return formatResponse({
+        res,
+        result: {
+          id: signedInUser.userId,
+          email: signedInUser.email,
+          name: signedInUser.fullName
+        }
+      });
+    } catch (ex) {
+      logger.error(ex.message);
+      if (ex instanceof InvalidCredentials) {
+        res.status(StatusCodes.FORBIDDEN);
+      } else if (ex instanceof UserNotFound) {
+        res.status(StatusCodes.NOT_FOUND);
+      } else {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR);
+      }
+
+      return next(createError(res.statusCode, ex.message));
+    }
+  }
+
+  async signoutUser(req: Request, res: Response, next: NextFunction) {
+    try {
+      const sessionId = req.sessionId;
+      await userService.deleteUserSession(sessionId);
+      return formatResponse({
+        res,
+        result: {
+          success: true
+        }
       });
     } catch (ex) {
       logger.error(ex.message);

@@ -1,7 +1,7 @@
 declare namespace Express {
   interface Request {
-    userId?: number;
-    user: import("@entities/User").User;
+    sessionId?: string;
+    user?: import("@entities/User").User;
   }
 }
 

@@ -40,6 +40,7 @@ class AuthMiddleware {
 
       logger.info("User fetched, attaching it to request object");
       req.user = user;
+      req.sessionId = token;
       return next();
     } catch (error) {
       logger.error(error.message);
