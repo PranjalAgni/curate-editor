@@ -1,3 +1,4 @@
+require("dotenv-safe").config({ allowEmptyValues: true });
 const path = require("path");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
@@ -42,7 +43,10 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: "[name].css"
     }),
-    new webpack.HotModuleReplacementPlugin()
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.DefinePlugin({
+      BASE_API_URL: JSON.stringify(process.env.BASE_API_URL)
+    })
   ],
   devServer: {
     hot: true,

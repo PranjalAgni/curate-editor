@@ -7,7 +7,8 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { LockOutlined } from "@material-ui/icons";
-import React from "react";
+import axios from "axios";
+import React, { useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -25,12 +26,63 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1)
   },
   submit: {
-    margin: theme.spacing(3, 0, 2)
+    margin: theme.spacing(3, 0, 2),
+    "&:hover": {
+      backgroundColor: "#082767"
+    }
   }
 }));
 
 const Signup = () => {
   const classes = useStyles();
+
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleChange = (event: React.SyntheticEvent) => {
+    const target = event.target as HTMLInputElement;
+
+    const { name, value } = target;
+
+    if (name === "fullName") {
+      setFullName(value);
+    } else if (name === "email") {
+      setEmail(value);
+    } else if (name === "password") {
+      setPassword(value);
+    }
+  };
+
+  const handleSubmit = async (event: React.SyntheticEvent) => {
+    event.preventDefault();
+    const payload = {
+      fullName,
+      email,
+      password
+    };
+
+    const API_URL = `${BASE_API_URL}/auth/signup`;
+
+    try {
+      const response = await axios({
+        method: "POST",
+        url: API_URL,
+        data: JSON.stringify(payload),
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true
+      });
+
+      console.log("Response: ", response);
+
+      setFullName("");
+      setEmail("");
+      setPassword("");
+    } catch (ex) {
+      console.error(ex);
+    }
+  };
+
   return (
     <Container component="main" maxWidth="xs">
       <div className={classes.paper}>
@@ -48,7 +100,9 @@ const Signup = () => {
             fullWidth
             id="name"
             label="Full Name"
-            name="name"
+            name="fullName"
+            value={fullName}
+            onChange={handleChange}
             autoComplete="name"
             autoFocus
           />
@@ -60,6 +114,8 @@ const Signup = () => {
             id="email"
             label="Email Address"
             name="email"
+            value={email}
+            onChange={handleChange}
             autoComplete="email"
             autoFocus
           />
@@ -71,6 +127,8 @@ const Signup = () => {
             name="password"
             label="Password"
             type="password"
+            value={password}
+            onChange={handleChange}
             id="password"
             autoComplete="current-password"
           />
@@ -81,6 +139,7 @@ const Signup = () => {
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={handleSubmit}
           >
             Sign Up
           </Button>

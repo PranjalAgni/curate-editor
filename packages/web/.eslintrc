@@ -13,6 +13,9 @@
     "sourceType": "module"
   },
   "plugins": ["react", "@typescript-eslint", "prettier"],
+  "globals": {
+    "BASE_API_URL": true
+  },
   "rules": {
     "no-console": 1,
     "prettier/prettier": 2,
