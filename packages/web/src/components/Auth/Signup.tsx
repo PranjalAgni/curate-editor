@@ -7,8 +7,8 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { LockOutlined } from "@material-ui/icons";
-import axios from "axios";
 import React, { useState } from "react";
+import axiosInstance from "../../utils/axios";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -65,12 +65,10 @@ const Signup = () => {
     const API_URL = `${BASE_API_URL}/auth/signup`;
 
     try {
-      const response = await axios({
+      const response = await axiosInstance({
         method: "POST",
         url: API_URL,
-        data: JSON.stringify(payload),
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true
+        data: JSON.stringify(payload)
       });
 
       console.log("Response: ", response);

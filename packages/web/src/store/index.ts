@@ -1,7 +1,6 @@
 import { combineReducers } from "redux";
 
-import { UserState } from "../actions/user";
-import { userReducer } from "./user";
+import { UserState, userReducer } from "./user";
 
 // The top-level state object
 export interface ApplicationState {

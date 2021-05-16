@@ -1,5 +1,5 @@
 import { Reducer } from "redux";
-import { UserActionTypes, UserState } from "../../actions/user";
+import { UserActionTypes, UserState } from "./types";
 
 export const initialState: UserState = {
   user: null
