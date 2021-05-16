@@ -1,6 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-shadow */
-
 export type User = {
   firstName: string;
   email: string;
