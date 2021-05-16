@@ -29,5 +29,12 @@ export default {
       json: false,
       colorize: true
     }
+  },
+  cookie: {
+    name: "qid",
+    maxAge: 1000 * 60 * 60 * 24
+  },
+  session: {
+    secret: "this-is-some-long-secret"
   }
 };

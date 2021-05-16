@@ -1,26 +1,54 @@
 import { CommonRoutesConfig } from "@common/common.routes.config";
-import logger, { loggerStreamWrite } from "@utils/logger";
+import { loggerStreamWrite } from "@utils/logger";
 import compression from "compression";
 import cors from "cors";
 import debug from "debug";
 import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
-import { createConnection } from "typeorm";
+import session from "express-session";
+import connectRedis from "connect-redis";
 import loadDB from "./loaders/db";
 import loadRoutes from "./loaders/routes";
+import config from "./config";
+import redisClient from "@utils/redis";
 
 const initalizeApp = async (): Promise<express.Application> => {
   const app: express.Application = express();
   const debugLog: debug.IDebugger = debug("server:app");
+  const RedisStore = connectRedis(session);
 
   await loadDB();
 
   // If we are behind some reverse proxy like Nginx then we can trust this X-Forwarded-For header
   // Read More: https://stackoverflow.com/questions/39930070/nodejs-express-why-should-i-use-app-enabletrust-proxy
-  app.enable("trust proxy");
+  app.set("trust proxy", 1);
 
-  app.use(cors());
+  app.use(
+    session({
+      name: config.cookie.name,
+      store: new RedisStore({
+        client: redisClient,
+        disableTouch: true
+      }),
+      cookie: {
+        maxAge: config.cookie.maxAge, // 1 day
+        httpOnly: true,
+        sameSite: "lax", // csrf
+        secure: !config.isDev // cookie only works in https
+      },
+      saveUninitialized: false,
+      secret: config.session.secret,
+      resave: false
+    })
+  );
+
+  app.use(
+    cors({
+      origin: "http://localhost:3000",
+      credentials: true
+    })
+  );
   app.use(helmet());
   app.use(compression());
   app.use(express.json());

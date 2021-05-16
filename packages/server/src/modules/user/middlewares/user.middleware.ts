@@ -6,6 +6,7 @@ import {
   ReadUserByIdStruct,
   SignInUserStruct
 } from "../dtos/user.dto";
+import { UnprocessableEntity } from "http-errors";
 
 class UserMiddleware {
   private static instance: UserMiddleware;
@@ -52,18 +53,9 @@ class UserMiddleware {
       assert(req.body, SignInUserStruct);
       return next();
     } catch (ex) {
+      // return next(new UnprocessableEntity(ex));
       return unprocessableEntityError(ex, res, next);
     }
-  }
-
-  addUserAuthToken(
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-  ) {
-    const sessionId = req.sessionId;
-    res.setHeader("authorization", sessionId);
-    return next();
   }
 }
 

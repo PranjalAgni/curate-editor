@@ -46,18 +46,8 @@ class UserService implements CRUD {
     return await userDao.findOne(userId);
   }
 
-  async getUserBySessionId(sessionId: string): Promise<User> {
-    const authToken = await userDao.getUserBySessionId(sessionId);
-    return authToken.user;
-  }
-
   async getUserByEmail(emailId: string) {
     return await userDao.getUserByEmail(emailId);
-  }
-
-  async createUserSession(user: User): Promise<string> {
-    const authToken = await userDao.createUserAuthToken(user);
-    return authToken.sessionId;
   }
 
   async signinUser(userData: SignInUserDto): Promise<User> {
@@ -76,12 +66,7 @@ class UserService implements CRUD {
       throw new InvalidCredentials("Wrong password provided");
     }
 
-    await userDao.deleteUserAuthTokenByEmail(user.email);
     return user;
-  }
-
-  async deleteUserSession(sessionId: string): Promise<void> {
-    await userDao.deleteUserAuthToken(sessionId);
   }
 
   list: (limit: number, page: number) => Promise<unknown>;

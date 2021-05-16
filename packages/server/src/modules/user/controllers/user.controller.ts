@@ -1,3 +1,4 @@
+import config from "@config/index";
 import {
   CreateUserDto,
   ReadUserByIdStruct,
@@ -10,13 +11,11 @@ import UserNotFound from "@user/exceptions/UserNotFound";
 import userService from "@user/services/user.service";
 import { formatResponse } from "@utils/express";
 import logger from "@utils/logger";
-import { addSessionToken } from "@utils/session";
 import debug from "debug";
 import { NextFunction, Request, Response } from "express";
 import createError from "http-errors";
 import { StatusCodes } from "http-status-codes";
 import { create } from "superstruct";
-
 const debugLog: debug.IDebugger = debug("server:user-controller");
 
 class UserController {
@@ -42,9 +41,8 @@ class UserController {
       }
 
       const user = await userService.create(data);
+      req.session.userId = user.userId;
       debugLog(user);
-      const sessionId = await userService.createUserSession(user);
-      addSessionToken(res, sessionId);
       return formatResponse({
         res,
         result: {
@@ -100,8 +98,7 @@ class UserController {
       const data = req.body as SignInUserDto;
 
       const signedInUser = await userService.signinUser(data);
-      const sessionId = await userService.createUserSession(signedInUser);
-      addSessionToken(res, sessionId);
+      req.session.userId = signedInUser.userId;
       return formatResponse({
         res,
         result: {
@@ -126,8 +123,12 @@ class UserController {
 
   async signoutUser(req: Request, res: Response, next: NextFunction) {
     try {
-      const sessionId = req.sessionId;
-      await userService.deleteUserSession(sessionId);
+      await req.session.destroy((err) => {
+        res.clearCookie(config.cookie.name);
+        if (err) throw new Error("Error occured, while deleting session");
+        logger.info("Successfully logged out user");
+      });
+
       return formatResponse({
         res,
         result: {

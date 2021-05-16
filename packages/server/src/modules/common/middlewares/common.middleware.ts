@@ -30,6 +30,7 @@ class CommonMiddleware {
   ) {
     const statusCode = res.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
     res.status(statusCode);
+
     return res.json({
       status: statusCode,
       result: null,

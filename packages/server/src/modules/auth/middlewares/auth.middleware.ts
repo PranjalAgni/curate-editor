@@ -1,10 +1,6 @@
-import config from "@config/index";
-import userService from "@user/services/user.service";
 import { userNotAuthenticated } from "@utils/express";
 import logger from "@utils/logger";
 import { NextFunction, Request, Response } from "express";
-import createError from "http-errors";
-import { StatusCodes } from "http-status-codes";
 
 class AuthMiddleware {
   private static instance: AuthMiddleware;
@@ -16,31 +12,50 @@ class AuthMiddleware {
     return AuthMiddleware.instance;
   }
 
+  // async isAuth2(req: Request, res: Response, next: NextFunction) {
+  //   try {
+  //     logger.info(`Inside auth interceptor for url ${req.originalUrl}`);
+  //     const authHeader = req.headers["authorization"];
+  //     let token = null;
+  //     if (authHeader.startsWith("Bearer ")) {
+  //       token = authHeader.substring(7, authHeader.length);
+  //     }
+
+  //     if (!token) {
+  //       return userNotAuthenticated(res, next);
+  //     }
+
+  //     logger.info(`Extracted token: ${token}`);
+
+  //     const user = await userService.getUserBySessionId(token);
+
+  //     if (!user) {
+  //       logger.error("No user found");
+  //       return userNotAuthenticated(res, next);
+  //     }
+
+  //     logger.info("User fetched, attaching it to request object");
+  //     req.user = user;
+  //     req.sessionId = token;
+  //     return next();
+  //   } catch (error) {
+  //     logger.error(error.message);
+  //     return userNotAuthenticated(res, next);
+  //   }
+  // }
+
   async isAuth(req: Request, res: Response, next: NextFunction) {
     try {
       logger.info(`Inside auth interceptor for url ${req.originalUrl}`);
-      const authHeader = req.headers["authorization"];
-      let token = null;
-      if (authHeader.startsWith("Bearer ")) {
-        token = authHeader.substring(7, authHeader.length);
-      }
+      const userId = req.session.userId;
 
-      if (!token) {
+      if (!userId) {
+        logger.info("User not authenticated, returning 401");
         return userNotAuthenticated(res, next);
       }
 
-      logger.info(`Extracted token: ${token}`);
+      logger.info(`Fetched userId =  ${userId}`);
 
-      const user = await userService.getUserBySessionId(token);
-
-      if (!user) {
-        logger.error("No user found");
-        return userNotAuthenticated(res, next);
-      }
-
-      logger.info("User fetched, attaching it to request object");
-      req.user = user;
-      req.sessionId = token;
       return next();
     } catch (error) {
       logger.error(error.message);
