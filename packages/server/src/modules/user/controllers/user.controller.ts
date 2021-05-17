@@ -9,7 +9,7 @@ import InvalidCredentials from "@user/exceptions/InvalidCredentials";
 import UserAlreadyExists from "@user/exceptions/UserAlreadyExists";
 import UserNotFound from "@user/exceptions/UserNotFound";
 import userService from "@user/services/user.service";
-import { formatResponse } from "@utils/express";
+import { formatResponse } from "@utils/response";
 import logger from "@utils/logger";
 import debug from "debug";
 import { NextFunction, Request, Response } from "express";
@@ -54,11 +54,17 @@ class UserController {
       logger.error(ex.message);
       if (ex instanceof UserAlreadyExists) {
         res.status(StatusCodes.CONFLICT);
+        return next([
+          {
+            field: "email",
+            message: "Email already exists"
+          }
+        ]);
       } else {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR);
       }
 
-      return next(createError(res.statusCode, ex.message));
+      return next(createError(res.statusCode, ex.message, { expose: false }));
     }
   }
 

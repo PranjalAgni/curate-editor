@@ -1,9 +1,10 @@
 import config from "@config/index";
+import debug from "debug";
 import { NextFunction, Request, Response } from "express";
 import createError from "http-errors";
 import { StatusCodes } from "http-status-codes";
 
-// const debugLog = debug("server:common-middleware");
+const debugLog = debug("server:common-middleware");
 class CommonMiddleware {
   private static instance: CommonMiddleware;
 

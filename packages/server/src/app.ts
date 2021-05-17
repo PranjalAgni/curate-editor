@@ -8,7 +8,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import session from "express-session";
 import connectRedis from "connect-redis";
-import loadDB from "./loaders/db";
+import connectDB from "./loaders/db";
 import loadRoutes from "./loaders/routes";
 import config from "./config";
 import redisClient from "@utils/redis";
@@ -18,7 +18,7 @@ const initalizeApp = async (): Promise<express.Application> => {
   const debugLog: debug.IDebugger = debug("server:app");
   const RedisStore = connectRedis(session);
 
-  await loadDB();
+  await connectDB();
 
   // If we are behind some reverse proxy like Nginx then we can trust this X-Forwarded-For header
   // Read More: https://stackoverflow.com/questions/39930070/nodejs-express-why-should-i-use-app-enabletrust-proxy

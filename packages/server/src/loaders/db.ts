@@ -5,7 +5,7 @@ import { Connection, createConnection } from "typeorm";
 
 const debugLog = debug("server:loaders-db");
 
-const loadDB = async (): Promise<Connection> => {
+const connectDB = async (): Promise<Connection> => {
   const db = await createConnection();
   if (config.isDev) {
     await db.synchronize();
@@ -17,4 +17,4 @@ const loadDB = async (): Promise<Connection> => {
   return db;
 };
 
-export default loadDB;
+export default connectDB;

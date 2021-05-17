@@ -1,4 +1,4 @@
-import { userNotAuthenticated } from "@utils/express";
+import { userNotAuthenticated } from "@utils/response";
 import logger from "@utils/logger";
 import { NextFunction, Request, Response } from "express";
 

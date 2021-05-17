@@ -21,15 +21,17 @@ export const unprocessableEntityError = (
 ): void => {
   logger.error(error);
   res.status(StatusCodes.UNPROCESSABLE_ENTITY);
+
   if (error instanceof StructError) {
-    return next(
-      createError(StatusCodes.UNPROCESSABLE_ENTITY, {
-        key: error.key,
-        reason: error.failures
-      })
-    );
+    return next([
+      {
+        field: error.key,
+        message: `Invalid value passed ${error.value}`
+      }
+    ]);
   }
-  next(createError(StatusCodes.UNPROCESSABLE_ENTITY, error.name));
+
+  return next(createError(StatusCodes.UNPROCESSABLE_ENTITY, error.name));
 };
 
 export const userNotAuthenticated = (
@@ -38,7 +40,8 @@ export const userNotAuthenticated = (
 ): void => {
   logger.error("User not authenitcated, going to return 401");
   res.status(StatusCodes.UNAUTHORIZED);
-  next(
+
+  return next(
     createError(
       StatusCodes.UNAUTHORIZED,
       getReasonPhrase(StatusCodes.UNAUTHORIZED)

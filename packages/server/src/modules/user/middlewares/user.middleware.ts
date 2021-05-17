@@ -1,12 +1,11 @@
 import express from "express";
-import { unprocessableEntityError } from "../../../utils/express";
 import { assert } from "superstruct";
+import { unprocessableEntityError } from "../../../utils/response";
 import {
   CreateUserStruct,
   ReadUserByIdStruct,
   SignInUserStruct
 } from "../dtos/user.dto";
-import { UnprocessableEntity } from "http-errors";
 
 class UserMiddleware {
   private static instance: UserMiddleware;
@@ -53,7 +52,6 @@ class UserMiddleware {
       assert(req.body, SignInUserStruct);
       return next();
     } catch (ex) {
-      // return next(new UnprocessableEntity(ex));
       return unprocessableEntityError(ex, res, next);
     }
   }
