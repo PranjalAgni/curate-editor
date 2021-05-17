@@ -1,5 +1,6 @@
+import { all, fork } from "redux-saga/effects";
 import { combineReducers } from "redux";
-
+import userSagas from "./user/sagas";
 import { UserState, userReducer } from "./user";
 
 // The top-level state object
@@ -14,3 +15,7 @@ export const createRootReducer = () =>
   combineReducers({
     user: userReducer
   });
+
+export function* rootSaga() {
+  yield all([userSagas].sort().map(fork));
+}

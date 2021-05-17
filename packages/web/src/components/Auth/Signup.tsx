@@ -1,14 +1,19 @@
 import {
   Avatar,
+  Backdrop,
   Button,
+  CircularProgress,
   Container,
   TextField,
   Typography
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { LockOutlined } from "@material-ui/icons";
-import React, { useState } from "react";
-import axiosInstance from "../../utils/axios";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router";
+import { ApplicationState } from "../../store";
+import { startSignup } from "../../store/user";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -30,15 +35,69 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       backgroundColor: "#082767"
     }
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#000"
   }
 }));
 
 const Signup = () => {
   const classes = useStyles();
 
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const isLoading = useSelector(
+    (state: ApplicationState) => state.user.isLoading
+  );
+
+  const isAuthenticated = useSelector(
+    (state: ApplicationState) => state.user.isAuthenticated
+  );
+
+  const errors = useSelector((state: ApplicationState) => state.user.errors);
+
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [formErrors, setFormErrors] = useState({
+    fullName: "",
+    password: "",
+    email: ""
+  });
+
+  const resetForm = () => {
+    setFormErrors({
+      fullName: "",
+      password: "",
+      email: ""
+    });
+  };
+
+  const resetFormData = () => {
+    setEmail("");
+    setPassword("");
+    setFullName("");
+  };
+
+  useEffect(() => {
+    if (!errors?.length) return resetForm();
+    errors?.forEach((error) => {
+      setFormErrors((currentErrors) => ({
+        ...currentErrors,
+        [error.field]: error.message
+      }));
+    });
+
+    console.log(formErrors);
+  }, [errors]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      resetFormData();
+      history.push("/dash");
+    }
+  }, [isAuthenticated]);
 
   const handleChange = (event: React.SyntheticEvent) => {
     const target = event.target as HTMLInputElement;
@@ -62,28 +121,15 @@ const Signup = () => {
       password
     };
 
-    const API_URL = `${BASE_API_URL}/auth/signup`;
-
-    try {
-      const response = await axiosInstance({
-        method: "POST",
-        url: API_URL,
-        data: JSON.stringify(payload)
-      });
-
-      console.log("Response: ", response);
-
-      setFullName("");
-      setEmail("");
-      setPassword("");
-    } catch (ex) {
-      console.error(ex);
-    }
+    dispatch(startSignup(payload));
   };
 
   return (
     <Container component="main" maxWidth="xs">
       <div className={classes.paper}>
+        <Backdrop className={classes.backdrop} open={isLoading}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
         <Avatar className={classes.avatar}>
           <LockOutlined color="secondary" />
         </Avatar>
@@ -103,6 +149,8 @@ const Signup = () => {
             onChange={handleChange}
             autoComplete="name"
             autoFocus
+            error={!!formErrors.fullName}
+            helperText={formErrors.fullName}
           />
           <TextField
             variant="outlined"
@@ -116,6 +164,8 @@ const Signup = () => {
             onChange={handleChange}
             autoComplete="email"
             autoFocus
+            error={!!formErrors.email}
+            helperText={formErrors.email}
           />
           <TextField
             variant="outlined"
@@ -129,6 +179,8 @@ const Signup = () => {
             onChange={handleChange}
             id="password"
             autoComplete="current-password"
+            error={!!formErrors.password}
+            helperText={formErrors.password}
           />
 
           <Button
