@@ -46,7 +46,7 @@ class UserController {
       return formatResponse({
         res,
         result: {
-          id: user.userId,
+          fullName: user.fullName,
           email: user.email
         }
       });
@@ -108,9 +108,8 @@ class UserController {
       return formatResponse({
         res,
         result: {
-          id: signedInUser.userId,
           email: signedInUser.email,
-          name: signedInUser.fullName
+          fullName: signedInUser.fullName
         }
       });
     } catch (ex) {
@@ -129,17 +128,16 @@ class UserController {
 
   async signoutUser(req: Request, res: Response, next: NextFunction) {
     try {
-      await req.session.destroy((err) => {
+      return await req.session.destroy((err) => {
         res.clearCookie(config.cookie.name);
         if (err) throw new Error("Error occured, while deleting session");
         logger.info("Successfully logged out user");
-      });
-
-      return formatResponse({
-        res,
-        result: {
-          success: true
-        }
+        return formatResponse({
+          res,
+          result: {
+            success: true
+          }
+        });
       });
     } catch (ex) {
       logger.error(ex.message);
