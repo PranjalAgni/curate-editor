@@ -1,11 +1,20 @@
 import { AxiosResponse } from "axios";
+import ActionBackup from "material-ui/svg-icons/action/backup";
 import { all, call, fork, put, takeLatest } from "redux-saga/effects";
 import { PayloadAction } from "typesafe-actions";
 import { makeAPICall } from "../../utils/api";
-import { signupFailed, signupSuccess } from "./actions";
 import {
+  signinFailed,
+  signinSuccess,
+  signupFailed,
+  signupSuccess
+} from "./actions";
+import {
+  StartUserSignin,
   StartUserSignup,
   UserActionTypes,
+  UserSigninFailed,
+  UserSigninSuccess,
   UserSignupFailed,
   UserSignupSuccess
 } from "./types";
@@ -13,9 +22,8 @@ import {
 function* handleSignupWorker(
   action: PayloadAction<UserActionTypes.START_SIGNUP, StartUserSignup>
 ) {
-  let response: AxiosResponse | null = null;
   try {
-    response = yield call(makeAPICall, {
+    const response: AxiosResponse = yield call(makeAPICall, {
       url: "/auth/signup",
       payload: action.payload
     });
@@ -31,12 +39,50 @@ function* handleSignupWorker(
   }
 }
 
+function* handleSigninWorker(
+  action: PayloadAction<UserActionTypes.START_SIGNIN, StartUserSignin>
+) {
+  try {
+    const response: AxiosResponse = yield call(makeAPICall, {
+      url: "/auth/signin",
+      payload: action.payload
+    });
+
+    const result = response.data?.result as UserSigninSuccess;
+    console.log("Body: ", result);
+    yield put(signinSuccess(result));
+  } catch (ex) {
+    const errors = (ex?.response?.data?.error ?? []) as UserSigninFailed;
+    yield put(signinFailed(errors));
+  }
+}
+
+function* handleSignoutWorker() {
+  try {
+    const response: AxiosResponse = yield call(makeAPICall, {
+      url: "/auth/signout"
+    });
+
+    console.log("Response: ", response.status);
+  } catch (ex) {
+    console.log(ex.response);
+  }
+}
+
+function* watchForSignin() {
+  yield takeLatest(UserActionTypes.START_SIGNIN, handleSigninWorker);
+}
+
 function* watchForSignup() {
   yield takeLatest(UserActionTypes.START_SIGNUP, handleSignupWorker);
 }
 
+function* watchForSignout() {
+  yield takeLatest(UserActionTypes.SIGNOUT_USER, handleSignoutWorker);
+}
+
 function* userSagas() {
-  yield all([fork(watchForSignup)]);
+  yield all([watchForSignup, watchForSignin, watchForSignout].map(fork));
 }
 
 export default userSagas;

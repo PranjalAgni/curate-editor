@@ -4,7 +4,7 @@ import axiosInstance from "./axios";
 export type APICallConfig = {
   url: string;
   method?: Method;
-  payload: any;
+  payload?: any;
 };
 
 export const makeAPICall = async ({

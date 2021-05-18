@@ -41,12 +41,45 @@ const reducer: Reducer<UserState> = (state = initialState, action) => {
         errors
       };
     }
+    case UserActionTypes.START_SIGNIN: {
+      return {
+        ...state,
+        isLoading: true,
+        isAuthenticated: false,
+        errors: []
+      };
+    }
+    case UserActionTypes.SIGNIN_SUCCESS: {
+      const { fullName, email } = action.payload;
+      return {
+        ...state,
+        isLoading: false,
+        isAuthenticated: true,
+        fullName,
+        email,
+        errors: []
+      };
+    }
+    case UserActionTypes.SIGNIN_FAILED: {
+      const errors = action.payload;
+      return {
+        ...state,
+        isLoading: false,
+        isAuthenticated: false,
+        errors
+      };
+    }
     case UserActionTypes.SET_USER: {
       const { fullName, email } = action.payload;
       return {
         ...state,
         fullName,
         email
+      };
+    }
+    case UserActionTypes.SIGNOUT_USER: {
+      return {
+        ...initialState
       };
     }
     default: {

@@ -2,8 +2,11 @@
 import { action } from "typesafe-actions";
 import {
   SetUser,
+  StartUserSignin,
   StartUserSignup,
   UserActionTypes,
+  UserSigninFailed,
+  UserSigninSuccess,
   UserSignupFailed,
   UserSignupSuccess
 } from "./types";
@@ -24,5 +27,16 @@ export const signupSuccess = (payload: UserSignupSuccess) =>
 export const signupFailed = (payload: UserSignupFailed) =>
   action(UserActionTypes.SIGNUP_FAILED, payload);
 
+export const startSignin = (payload: StartUserSignin) =>
+  action(UserActionTypes.START_SIGNIN, payload);
+
+export const signinSuccess = (payload: UserSigninSuccess) =>
+  action(UserActionTypes.SIGNIN_SUCCESS, payload);
+
+export const signinFailed = (payload: UserSigninFailed) =>
+  action(UserActionTypes.SIGNIN_FAILED, payload);
+
 export const setUser = (user: SetUser) =>
   action(UserActionTypes.SET_USER, user);
+
+export const startSignout = () => action(UserActionTypes.SIGNOUT_USER);

@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
     "&:hover": {
-      backgroundColor: "#082767"
+      backgroundColor: "#457b9d"
     }
   },
   backdrop: {
@@ -152,6 +152,7 @@ const Signup = () => {
             error={!!formErrors.fullName}
             helperText={formErrors.fullName}
           />
+
           <TextField
             variant="outlined"
             margin="normal"
@@ -163,10 +164,10 @@ const Signup = () => {
             value={email}
             onChange={handleChange}
             autoComplete="email"
-            autoFocus
             error={!!formErrors.email}
             helperText={formErrors.email}
           />
+
           <TextField
             variant="outlined"
             margin="normal"
@@ -178,7 +179,7 @@ const Signup = () => {
             value={password}
             onChange={handleChange}
             id="password"
-            autoComplete="current-password"
+            autoComplete="password"
             error={!!formErrors.password}
             helperText={formErrors.password}
           />

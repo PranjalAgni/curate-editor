@@ -1,6 +1,6 @@
 export default {
   primary: {
-    main: "#3454D1",
+    main: "#219ebc",
     light: "#ade498",
     dark: "#251f44",
     contrastText: "#fff"
