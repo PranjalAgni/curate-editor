@@ -7,6 +7,7 @@ import {
   TextField,
   Typography
 } from "@material-ui/core";
+
 import { makeStyles } from "@material-ui/core/styles";
 import { LockOutlined } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
@@ -81,7 +82,7 @@ const Signin = () => {
     errors?.forEach((error) => {
       setFormErrors((currentErrors) => ({
         ...currentErrors,
-        [error.field]: error.message
+        [error.field]: error?.message
       }));
     });
 
@@ -129,6 +130,7 @@ const Signin = () => {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
+
         <form className={classes.form} noValidate>
           <TextField
             variant="outlined"

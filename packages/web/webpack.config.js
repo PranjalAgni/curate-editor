@@ -52,7 +52,7 @@ module.exports = {
     hot: true,
     inline: true,
     host: "localhost",
-    port: 3000,
+    port: 3030,
     compress: true,
     open: true,
     disableHostCheck: true,

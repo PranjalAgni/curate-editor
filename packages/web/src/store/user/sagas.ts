@@ -1,5 +1,4 @@
-import { AxiosResponse } from "axios";
-import ActionBackup from "material-ui/svg-icons/action/backup";
+import { AxiosResponse, AxiosError } from "axios";
 import { all, call, fork, put, takeLatest } from "redux-saga/effects";
 import { PayloadAction } from "typesafe-actions";
 import { makeAPICall } from "../../utils/api";
@@ -34,7 +33,8 @@ function* handleSignupWorker(
 
     yield put(signupSuccess(result));
   } catch (ex) {
-    const errors = (ex?.response?.data?.error ?? []) as UserSignupFailed;
+    const error = ex as AxiosError;
+    const errors = (error?.response?.data?.error ?? []) as UserSignupFailed;
     yield put(signupFailed(errors));
   }
 }
@@ -52,7 +52,8 @@ function* handleSigninWorker(
     console.log("Body: ", result);
     yield put(signinSuccess(result));
   } catch (ex) {
-    const errors = (ex?.response?.data?.error ?? []) as UserSigninFailed;
+    const error = ex as AxiosError;
+    const errors = (error?.response?.data?.error ?? []) as UserSigninFailed;
     yield put(signinFailed(errors));
   }
 }
@@ -65,7 +66,7 @@ function* handleSignoutWorker() {
 
     console.log("Response: ", response.status);
   } catch (ex) {
-    console.log(ex.response);
+    console.log((ex as AxiosError).response);
   }
 }
 
