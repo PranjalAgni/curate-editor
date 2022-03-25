@@ -1,7 +1,11 @@
+import config from "@config/index";
 import Redis from "ioredis";
 import logger from "./logger";
 
-const redis = new Redis();
+const redis = new Redis({
+  host: config.redis.host,
+  port: config.redis.port
+});
 
 redis.on("error", (err) => {
   logger.error(`Redis error occured: ${JSON.stringify(err)}`);

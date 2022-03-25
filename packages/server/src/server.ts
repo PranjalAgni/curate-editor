@@ -4,17 +4,21 @@ require("dotenv-safe").config({
 });
 require("module-alias/register");
 import config from "@config/index";
+import logger from "@utils/logger";
 import debug from "debug";
+import path from "path";
 import "reflect-metadata";
 import initalizeApp from "./app";
 
 const startServer = async () => {
   const debugLog: debug.IDebugger = debug("server");
 
+  debugLog(path.join(__dirname, "../", ".env.development"));
+
   const app = await initalizeApp();
 
   app.listen(config.port, () => {
-    debugLog(
+    logger.info(
       `Server running at http://localhost:${config.port} in ${config.env} mode`
     );
   });

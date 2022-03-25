@@ -45,7 +45,7 @@ const initalizeApp = async (): Promise<express.Application> => {
 
   app.use(
     cors({
-      origin: "http://localhost:3000",
+      origin: `http://localhost:3030`,
       credentials: true
     })
   );
@@ -63,7 +63,7 @@ const initalizeApp = async (): Promise<express.Application> => {
   app.get("/", (_req: express.Request, res: express.Response) => {
     res
       .status(200)
-      .send(`Server running at http://localhost:${process.env.PORT}`);
+      .json(`Server running at http://localhost:${process.env.PORT}`);
   });
 
   const routes = loadRoutes();

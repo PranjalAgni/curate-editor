@@ -1,1 +1,7 @@
-declare module "is-email";
+import "express-session";
+
+declare module "express-session" {
+  interface Session {
+    userId: number;
+  }
+}

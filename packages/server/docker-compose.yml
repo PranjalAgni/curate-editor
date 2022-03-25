@@ -5,17 +5,29 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DATABASE=paper
     volumes:
-      - shawarma-db:/var/lib/postgresql/data
-  project-hunt-server:
+      - ./postgres-data:/var/lib/postgresql/data
+      - ./scripts/create_tables.sql:/docker-entrypoint-initdb.d/init.sql
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    environment:
+      - REDIS_REPLICATION_MODE=master
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    volumes:
+      - ./redis-data:/var/lib/redis/data
+    entrypoint: redis-server --appendonly yes
+    restart: always
+  curate-editor-server:
     build:
       context: .
     depends_on:
       - postgres
+      - redis
     ports:
-      - "1234:1234"
-
-volumes:
-  shawarma-db:
+      - "5000:5000"

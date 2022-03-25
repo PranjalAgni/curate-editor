@@ -48,7 +48,6 @@ class AuthMiddleware {
     try {
       logger.info(`Inside auth interceptor for url ${req.originalUrl}`);
       const userId = req.session.userId;
-
       if (!userId) {
         logger.info("User not authenticated, returning 401");
         return userNotAuthenticated(res, next);

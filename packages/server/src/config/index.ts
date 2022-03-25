@@ -36,5 +36,9 @@ export default {
   },
   session: {
     secret: "this-is-some-long-secret"
+  },
+  redis: {
+    host: process.env.REDIS_HOST,
+    port: parseInt(process.env.REDIS_PORT, 10)
   }
 };
