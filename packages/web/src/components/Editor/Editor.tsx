@@ -1,36 +1,59 @@
 require("medium-editor/dist/css/medium-editor.css");
 require("medium-editor/dist/css/themes/default.css");
 
-import React from "react";
+import React, { useEffect } from "react";
 import MediumEditor from "medium-editor";
 
 export const Editor = () => {
-  const editor = new MediumEditor(".editable", {
-    placeholder: {
-      text: "Hey there this is a placeholder text"
-    },
-    toolbar: {
-      /* These are the default options for the toolbar,
-           if nothing is passed this is what is used */
-      allowMultiParagraphSelection: true,
-      buttons: ["bold", "italic", "underline", "anchor", "h2", "h3", "quote"],
-      diffLeft: 0,
-      diffTop: -10,
-      firstButtonClass: "medium-editor-button-first",
-      lastButtonClass: "medium-editor-button-last",
-      relativeContainer: undefined,
-      standardizeSelectionStart: false,
-      static: false,
-      /* options which only apply when static is true */
-      align: "center",
-      sticky: false,
-      updateOnEmptySelection: false
-    }
-  });
+  useEffect(() => {
+    const editor = new MediumEditor(".editor-window", {
+      targetBlank: true,
+      toolbar: {
+        buttons: [
+          "bold",
+          "italic",
+          "underline",
+          "anchor",
+          "h3",
+          "h4",
+          {
+            name: "unorderedlist",
+            contentDefault: "<b>UL</b>"
+          },
+          {
+            name: "orderedlist",
+            contentDefault: "<b>OL</b>"
+          },
+          "quote",
+          {
+            name: "pre",
+            action: "append-pre",
+            tagNames: ["pre"],
+            contentDefault: "PRE"
+          },
+          {
+            name: "strikethrough",
+            action: "strikethrough",
+            tagNames: ["strike"],
+            contentDefault: "CODE"
+          }
+        ]
+      },
+      placeholder: {
+        text: "Tell your story...",
+        hideOnClick: false
+      }
+    });
+
+    console.log("Editor mounted = ", editor);
+    return () => {
+      editor.destroy();
+    };
+  }, []);
 
   return (
     <div>
-      <div className="editable"></div>
+      <div className="editor-window"></div>
     </div>
   );
 };
