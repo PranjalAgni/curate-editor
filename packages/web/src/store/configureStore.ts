@@ -1,19 +1,11 @@
-import {
-  Store,
-  createStore,
-  applyMiddleware,
-  EmptyObject,
-  AnyAction
-} from "redux";
-import createSagaMiddleware from "redux-saga";
+import { applyMiddleware, createStore, Store } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
-import { ApplicationState, createRootReducer, rootSaga } from "./index";
 import { persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
-import { Reducer } from "react";
-import { PersistPartial } from "redux-persist/es/persistReducer";
 import persistStore from "redux-persist/es/persistStore";
 import { Persistor } from "redux-persist/es/types";
+import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
+import createSagaMiddleware from "redux-saga";
+import { ApplicationState, createRootReducer, rootSaga } from "./index";
 
 type ConfigureStoreResult = {
   store: Store<ApplicationState>;
